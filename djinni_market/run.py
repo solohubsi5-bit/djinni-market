@@ -17,13 +17,18 @@ from pathlib import Path
 import pandas as pd
 from bs4 import BeautifulSoup
 
-from . import config, fetch, parse, slices
+from . import config, fetch, parse, report, slices
 
 SNAPSHOT_COLS = slices.KEYS + ('level',)
 
 
 def scrape_one(s: dict):
-    return s, parse.parse_page(fetch.get({k: s[k] for k in slices.KEYS}))
+    params = {k: s[k] for k in slices.KEYS}
+    try:
+        return s, parse.parse_page(fetch.get(params))
+    except Exception as e:  # noqa: BLE001 - re-raised with the URL attached
+        raise RuntimeError(json.dumps({'url': fetch.url_for(params), 'error': f'{type(e).__name__}: {e}'},
+                                      ensure_ascii=False)) from e
 
 
 def fetch_all(todo, ex, t0, label):
@@ -32,8 +37,8 @@ def fetch_all(todo, ex, t0, label):
     for n, f in enumerate(as_completed(futs), 1):
         try:
             done.append(f.result())
-        except Exception as e:  # noqa: BLE001 - counted, run fails above threshold
-            errors.append(repr(e))
+        except RuntimeError as e:
+            errors.append(json.loads(str(e)))
         if n % 500 == 0:
             print(f'  {label}: {n}/{len(todo)}  errors={len(errors)}  {time.time() - t0:.0f}s', flush=True)
     return done, errors
@@ -54,6 +59,16 @@ def update_categories(path: Path, filters: dict, today: str):
         w.writerows(sorted(rows.values(), key=lambda r: r['category']))
 
 
+def prune(out: Path, day: str, keep_days: int):
+    """Keep only the newest `keep_days` daily files per table (the git `data` branch is a rolling buffer)."""
+    cutoff = (date.fromisoformat(day) - timedelta(days=keep_days - 1)).isoformat()
+    for name in ('snapshot', 'histogram', 'monthly'):
+        for f in (out / name).glob('*.parquet'):
+            if f.stem < cutoff:
+                f.unlink()
+                print(f'pruned {f}')
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument('--max-level', type=int, default=slices.MAX_LEVEL)
@@ -65,6 +80,7 @@ def main(argv=None):
     a = ap.parse_args(argv)
 
     out = Path(a.out)
+    out.mkdir(parents=True, exist_ok=True)
     day = a.date
     if (out / 'snapshot' / f'{day}.parquet').exists() and not a.force:
         print(f'{day} already collected - nothing to do')
@@ -72,9 +88,19 @@ def main(argv=None):
 
     t0 = time.time()
     filters = parse.parse_filters(BeautifulSoup(fetch.get({'category': 'python'}), 'html.parser'))
+    missing = report.validate_filters(filters)
+    for dim, gone in missing.items():   # never send a value Djinni would silently ignore
+        setattr(config, {'english_level': 'ENGLISH_LEVELS', 'region': 'REGIONS',
+                         'work_format': 'WORK_FORMATS'}[dim],
+                tuple(v for v in report.CONFIGURED[dim] if v not in gone))
+    changes = report.filter_changes(out / 'filters.json', filters)
+
     todo = slices.level1(filters)
     if a.categories:
         keep = set(a.categories.split(','))
+        unknown = sorted(keep - set(filters['category']))
+        if unknown:
+            report.annotate('error', f'--categories not on Djinni: {unknown}')
         todo = [s for s in todo if s['category'] in keep]
     print(f'{len(filters["category"])} categories on Djinni; L1 = {len(todo)} slices', flush=True)
 
@@ -90,7 +116,8 @@ def main(argv=None):
             per_level[level] = {'fetched': len(todo), 'expandable': len(expand[level]), 'errors': len(errs)}
             print(f'L{level}: {per_level[level]}  {time.time() - t0:.0f}s', flush=True)
             if fetch.breaker_open():
-                print('circuit breaker open (repeated 403/429) - stopping, keeping what we have', file=sys.stderr)
+                report.annotate('error', 'circuit breaker open (repeated 403/429) - Djinni may be blocking us; '
+                                         'stopping early')
                 break
             level += 1
             if level > a.max_level:
@@ -99,21 +126,30 @@ def main(argv=None):
                     for c in slices.children(s, level)]
 
     total = sum(v['fetched'] for v in per_level.values())
-    run = {'date': day, 'finished_utc': datetime.now(timezone.utc).isoformat(timespec='seconds'),
-           'pages': total, 'ok': len(results), 'errors': len(errors), 'seconds': round(time.time() - t0),
-           'per_level': json.dumps(per_level)}
-    print(json.dumps(run))
-    if errors:
-        print('first errors:', *errors[:5], sep='\n  ')
-    if len(errors) / max(total, 1) > config.MAX_ERROR_RATE:
-        print(f'error rate above {config.MAX_ERROR_RATE:.0%} - not writing', file=sys.stderr)
+    too_many = len(errors) / max(total, 1) > config.MAX_ERROR_RATE
+    snaps = [{**{k: s[k] for k in SNAPSHOT_COLS}, **p['snapshot']} for s, p in results]
+    rep = {
+        'date': day, 'finished_utc': datetime.now(timezone.utc).isoformat(timespec='seconds'),
+        'status': 'failed' if too_many else ('partial' if fetch.breaker_open() else 'ok'),
+        'pages': total, 'ok': len(results), 'errors': len(errors), 'seconds': round(time.time() - t0),
+        'breaker_open': fetch.breaker_open(), 'per_level': per_level,
+        'config_values_missing': missing, 'filter_changes': changes,
+        'unmapped_categories': report.unmapped(filters),
+        'candidate_drops': report.drops(snaps, out, day),
+        'error_kinds': pd.Series([e['error'].split(':')[0] for e in errors]).value_counts().to_dict() if errors else {},
+        'error_samples': errors[:200],
+    }
+    report.write(out, rep)
+    print(json.dumps({k: rep[k] for k in ('date', 'status', 'pages', 'ok', 'errors', 'seconds', 'error_kinds')}))
+    if too_many:
+        report.annotate('error', f'error rate {len(errors)}/{total} above {config.MAX_ERROR_RATE:.0%} - '
+                                 f'nothing written; see run_report.json / job summary')
         return 1
 
-    snaps, hists, months = [], [], []
+    hists, months = [], []
     for s, p in results:
-        key = {k: s[k] for k in SNAPSHOT_COLS}
-        snaps.append({**key, **p['snapshot']})
         if s['level'] in config.DETAIL_LEVELS:
+            key = {k: s[k] for k in SNAPSHOT_COLS}
             hists += [{**key, **h} for h in p['histogram']]
             months += [{**key, **m} for m in p['monthly']]
 
@@ -128,25 +164,17 @@ def main(argv=None):
     update_categories(out / 'categories.csv', filters, day)
     (out / 'filters.json').write_text(json.dumps(filters, ensure_ascii=False, indent=1), encoding='utf-8')
     runs = out / 'runs.csv'
+    row = {k: rep[k] for k in ('date', 'finished_utc', 'status', 'pages', 'ok', 'errors', 'seconds')}
+    row['per_level'] = json.dumps(per_level)
     new = not runs.exists()
     with runs.open('a', encoding='utf-8', newline='') as f:
-        w = csv.DictWriter(f, fieldnames=list(run))
+        w = csv.DictWriter(f, fieldnames=list(row))
         if new:
             w.writeheader()
-        w.writerow(run)
+        w.writerow(row)
     if a.keep_days:
         prune(out, day, a.keep_days)
     return 0
-
-
-def prune(out: Path, day: str, keep_days: int):
-    """Keep only the newest `keep_days` daily files per table (the git `data` branch is a rolling buffer)."""
-    cutoff = (date.fromisoformat(day) - timedelta(days=keep_days - 1)).isoformat()
-    for name in ('snapshot', 'histogram', 'monthly'):
-        for f in (out / name).glob('*.parquet'):
-            if f.stem < cutoff:
-                f.unlink()
-                print(f'pruned {f}')
 
 
 if __name__ == '__main__':

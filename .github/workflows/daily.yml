@@ -81,7 +81,8 @@ jobs:
           retention-days: 7
 
       - name: Push data buffer (single commit, history discarded)
-        if: ${{ inputs.categories == '' }}
+        # also on failure: data files are unchanged then, but run_report.json explains what broke
+        if: ${{ always() && inputs.categories == '' && hashFiles('store/run_report.json') != '' }}
         run: |
           rm -rf /tmp/push && mkdir /tmp/push && cp -r store/. /tmp/push/ && rm -rf /tmp/push/.git
           cd /tmp/push

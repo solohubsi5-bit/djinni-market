@@ -1,147 +1,150 @@
-category,display_name,role,group,type
-2d_animation,2D Animation,Unknown,Other,back_office
-2d_artist,2D Artist,Unknown,Other,back_office
-3d_animation,3D Animation,Unknown,Other,back_office
-3d_artist,3D Artist,Unknown,Other,back_office
-account_manager,Account Manager,Account manager,Sales & Marketing,back_office
-accountant,Accountant,Finance,Finance,back_office
-advertising,Advertising,Unknown,Other,back_office
-affiliate_manager,Affiliate Manager,Marketing specialist,Sales & Marketing,back_office
-android,Android,Mobile Native,Development,developer
-angular,Angular,JS FE,Development,developer
-architect,Software Architect,Unknown,Other,back_office
-artist,2D/3D Artist / Illustrator,Unknown,Other,back_office
-asic_design,ASIC / Chip Design,Unknown,Other,back_office
-asp_net,ASP.NET,.NET,Development,developer
-avionics,Avionics,Unknown,Other,back_office
-blazor,Blazor,.NET,Development,developer
-business_analyst,Business Analyst,BA,Management,back_office
-business_development,Business Development,Unknown,Other,back_office
-c,C,C,Development,developer
-cbdo,Chief Business Development Officer (CBDO),CBDO,Executive,back_office
-cco,Chief Commercial Officer (CCO),CCO,Executive,back_office
-ceo,Chief Executive Officer (CEO),CEO,Executive,back_office
-cfo,Chief Financial Officer (CFO),CFO,Executive,back_office
-cio,Chief Information Officer (CIO),CIO,Executive,back_office
-cmo,Chief Marketing Officer (CMO),CMO,Executive,back_office
-content_design,Content Design / UX writer,Unknown,Other,back_office
-content_manager,Content Manager,Copywriter,Sales & Marketing,back_office
-content_marketing,Content Marketing,Marketing specialist,Sales & Marketing,back_office
-content_writing,Content Writer / Copywriter / Editor,Copywriter,Sales & Marketing,back_office
-coo,Chief Operating Officer (COO),COO,Executive,back_office
-cplusplus,C / C++ / Embedded,Unknown,Other,back_office
-cpo,Chief Product Officer (CPO),CPO,Executive,back_office
-cpp,C++,C++,Development,developer
-cso,Chief Security Officer (CSO),Unknown,Other,back_office
-cto,CTO,CTO,Executive,back_office
-data_analyst,Data Analyst,Data Scientist,Data & Analytics,developer
-data_engineer,Data Engineer,Data Engineer,Data & Analytics,developer
-data_science,Data Science,Data Scientist,Data & Analytics,developer
-deftech,DefTech,Unknown,Other,back_office
-delivery_manager,Delivery Manager,PM,Management,back_office
-design,Design,Unknown,Other,back_office
-dev_ops,DevOps,DevOps,DevOps & Infrastructure,developer
-digital_marketing,Digital Marketing,Unknown,Other,back_office
-digital_marketing_manager,Digital Marketing Manager,Unknown,Other,back_office
-dotnet,C# / .NET,.NET,Development,developer
-dotnet_cloud,Server & Cloud,Unknown,Other,back_office
-dotnet_desktop,Desktop Apps,Unknown,Other,back_office
-dotnet_gamedev,.NET Gamedev,Unknown,Other,back_office
-dotnet_mobile,Mobile Apps,Unknown,Other,back_office
-dotnet_web,Web Apps,Unknown,Other,back_office
-drupal,Drupal,Unknown,Other,back_office
-electronic_warfare,Electronic Warfare,Unknown,Other,back_office
-embedded,Embedded,Embedded,Development,developer
-engineering_manager,Engineering Manager,PM,Management,back_office
-erp_systems,ERP Systems,Unknown,Other,back_office
-finance_manager,Finance Manager,Finance,Finance,back_office
-finances,Finances,Finance,Finance,back_office
-financial_analyst,Financial Analyst,Finance,Finance,back_office
-finops,FinOps,Unknown,Other,back_office
-firmware,Firmware Engineer,Unknown,Other,back_office
-flutter,Flutter,Mobile Hybrid,Development,developer
-fpga,FPGA Engineer,Unknown,Other,back_office
-fullstack,Fullstack,Fullstack,Development,developer
-game_design,Game Design,Unknown,Other,back_office
-game_developer,Game Developer,Unknown,Other,back_office
-gamedev,Gamedev,Unknown,Other,back_office
-golang,Golang,Go,Development,developer
-graphic_design,Graphic Design,Graphic Designer,Design,developer
-hardware,Hardware,Unknown,Other,back_office
-hardware_engineer,Hardware Engineer,Unknown,Other,back_office
-head_chief,Head / Chief,Head Chief,Executive,back_office
-hr,HR,HR,Human Resources,back_office
-illustrator,Illustrator,Graphic Designer,Design,developer
-information_security,Information Security,Unknown,Other,back_office
-ios,iOS,Mobile Native,Development,developer
-java,Java,Java,Development,developer
-javascript,JavaScript / Front-End,JS FE,Development,developer
-laravel,Laravel,PHP,Development,developer
-lead,Tech Leadership,Lead,Management,back_office
-lead_generation,Lead Generation,Unknown,Other,back_office
-level_design,Level Design,Unknown,Other,back_office
-magento,Magento,PHP,Development,developer
-marketing,Marketing,Marketing,Sales & Marketing,back_office
-marketing_analyst,Marketing Analyst,Marketing specialist,Sales & Marketing,back_office
-markup,Markup,Unknown,Other,back_office
-maui,MAUI,.NET,Development,developer
-media_buying,Media Buying,Marketing specialist,Sales & Marketing,back_office
-military_software,Military Software / C4ISR,Unknown,Other,back_office
-ml_ai,ML / AI,Data Scientist,Data & Analytics,developer
-motion_design,Motion Design,Motion Designer,Design,developer
-ms_dynamics,MS Dynamics / Business Central,Unknown,Other,back_office
-node_js,Node.js,Node,Development,developer
-odoo,Odoo,Unknown,Other,back_office
-penetration_tester,Penetration Tester,Unknown,Other,back_office
-performance_marketing,Performance Marketing,Unknown,Other,back_office
-php,PHP,PHP,Development,developer
-ppc,PPC,Unknown,Other,back_office
-pr_manager,PR Manager,Marketing specialist,Sales & Marketing,back_office
-product_design,Product Design,Unknown,Other,back_office
-product_manager,Product Manager,PM,Management,back_office
-product_owner,Product Owner,PM,Management,back_office
-project_manager,Project Manager,PM,Management,back_office
-python,Python,Python,Development,developer
-qa,QA,QA,Quality Assurance,developer
-qa_automation,QA Automation,AQA,Quality Assurance,developer
-qa_hardware,QA Hardware / Embedded,Unknown,Other,back_office
-qa_manual,QA Manual,QA Manual,Quality Assurance,developer
-react,React.js,JS FE,Development,developer
-react_native,React Native,Mobile Native,Development,developer
-recruiter,Recruiter,Recruiter,Human Resources,back_office
-rf_engineer,RF Engineer,Unknown,Other,back_office
-robotics,Robotics Engineer,Unknown,Other,back_office
-ruby,Ruby,Unknown,Other,back_office
-rust,Rust,Unknown,Other,back_office
-sales,Sales,Sales,Sales & Marketing,back_office
-sales_leadership,Sales Leadership,Sales,Sales & Marketing,back_office
-sales_manager,Sales Manager,Sales,Sales & Marketing,back_office
-salesforce,Salesforce,Unknown,Other,back_office
-sap,SAP,Unknown,Other,back_office
-scala,Scala,Scala,Development,developer
-scrum_master,Scrum Master / Agile Coach,PM,Management,back_office
-security,Security,Security,Operations,back_office
-security_analyst,Security Analyst,Unknown,Other,back_office
-seo,SEO,Unknown,Other,back_office
-social_media,Social Media,Unknown,Other,back_office
-sql_dba,SQL / DBA,Unknown,Other,back_office
-support,Customer/Technical Support,Support,Sales & Marketing,back_office
-svelte,Svelte,JS FE,Development,developer
-symfony,Symfony,PHP,Development,developer
-sysadmin,Sysadmin,Sysadmin,IT Support,back_office
-technical_writing,Technical Writing,Unknown,Other,back_office
-uav_drone,UAV / Drone Engineer,Unknown,Other,back_office
-uav_drone_pilot,UAV / Drone Pilot,Unknown,Other,back_office
-ui_ux,UI/UX,UI/UX Designer,Design,developer
-unity,Unity Developer,Unknown,Other,back_office
-unreal,Unreal Developer,Unknown,Other,back_office
-ux_research,UX Research,UI/UX Designer,Design,developer
-vfx_artist,VFX Artist,Unknown,Other,back_office
-video_editor,Video Editor,Unknown,Other,back_office
-vue,Vue.js,JS FE,Development,developer
-weapons_systems,Weapons Systems,Unknown,Other,back_office
-winforms,WinForms,.NET,Development,developer
-wordpress,WordPress,Unknown,Other,back_office
-wpf,WPF,.NET,Development,developer
-xamarin,Xamarin,Unknown,Other,back_office
-yii,Yii,PHP,Development,developer
+category,display_name,on_djinni,role,group,type,role_HR,mapped
+2d_animation,2D Animation,True,Graphic Designer,Design,back_office,Graphic Designer,True
+2d_artist,2D Artist,True,Graphic Designer,Design,back_office,Graphic Designer,True
+3d_animation,3D Animation,True,Graphic Designer,Design,back_office,Graphic Designer,True
+3d_artist,3D Artist,True,Graphic Designer,Design,back_office,Graphic Designer,True
+account_manager,Account Manager,True,,,,,False
+accountant,Accountant,True,Finance,Finance,back_office,Finance,True
+advertising,Advertising,True,,,,,False
+affiliate_manager,Affiliate Manager,True,Marketing,Marketing,back_office,Marketing,True
+android,Android,True,Mobile Native,Development,front_office,Mobile Native,True
+angular,Angular,True,JS FE,Development,front_office,JS FE; FE,True
+architect,Software Architect,True,,,,,False
+artist,2D/3D Artist / Illustrator,True,,,,,False
+asic_design,ASIC / Chip Design,True,,,,,False
+asp_net,ASP.NET,True,FS .Net,Development,front_office,FS .Net; BE .Net,True
+avionics,Avionics,True,,,,,False
+blazor,Blazor,True,FS .Net,Development,front_office,FS .Net,True
+business_analyst,Business Analyst,True,BA,Management,front_office,BA,True
+business_development,Business Development,True,,,,,False
+c,C,True,C,Development,front_office,C,True
+cbdo,Chief Business Development Officer (CBDO),True,CBDO,Executive,back_office,CBDO,True
+cco,Chief Commercial Officer (CCO),True,CCO,Executive,back_office,CCO,True
+ceo,Chief Executive Officer (CEO),True,CEO,Executive,back_office,CEO,True
+cfo,Chief Financial Officer (CFO),True,CFO,Executive,back_office,CFO,True
+cio,Chief Information Officer (CIO),True,CIO,Executive,back_office,CIO,True
+cmo,Chief Marketing Officer (CMO),True,CMO,Executive,back_office,CMO,True
+content_design,Content Design / UX writer,True,Design,Design,back_office,Design,True
+content_manager,Content Manager,True,Marketing,Marketing,back_office,Marketing,True
+content_marketing,Content Marketing,True,Marketing,Marketing,back_office,Marketing,True
+content_writing,Content Writer / Copywriter / Editor,True,Marketing,Marketing,back_office,Marketing,True
+coo,Chief Operating Officer (COO),True,COO,Executive,back_office,COO,True
+cplusplus,C / C++ / Embedded,True,C++,Development,front_office,C++,True
+cpo,Chief Product Officer (CPO),True,CPO,Executive,back_office,CPO,True
+cpp,C++,True,C/C++/Embedded,Development,front_office,Embedded Developer,True
+cso,Chief Security Officer (CSO),True,,,,,False
+cto,CTO,True,CTO,Executive,back_office,CTO,True
+data_analyst,Data Analyst,True,Data Analyst,Development,front_office,Data Analyst,True
+data_engineer,Data Engineer,True,Data Engineer,Development,front_office,Data Engineer,True
+data_science,Data Science,True,Data Scientist,Development,front_office,Data Scientist,True
+deftech,DefTech,True,,,,,False
+delivery_manager,Delivery Manager,True,PM,Management,front_office,PM,True
+design,Design,True,Graphic Designer,Design,back_office,Graphic Designer,True
+dev_ops,DevOps,True,dev_ops,Development,front_office,DevOps,True
+digital_marketing,Digital Marketing,True,Marketing,Marketing,back_office,Marketing,True
+digital_marketing_manager,Digital Marketing Manager,True,Marketing,Marketing,back_office,Marketing,True
+dotnet,C# / .NET,True,FS .Net,Development,front_office,FS .Net; BE .Net,True
+dotnet_cloud,Server & Cloud,True,FS .Net,Development,front_office,FS .Net; BE .Net,True
+dotnet_desktop,Desktop Apps,True,FS .Net,Development,front_office,FS .Net; BE .Net,True
+dotnet_gamedev,.NET Gamedev,True,,,,,False
+dotnet_mobile,Mobile Apps,True,FS .Net,Development,front_office,FS .Net; BE .Net,True
+dotnet_web,Web Apps,True,FS .Net,Development,front_office,FS .Net; BE .Net,True
+drupal,Drupal,True,Web,Development,front_office,Web,True
+electronic_warfare,Electronic Warfare,True,,,,,False
+elixir,,False,Elixir,Development,front_office,Elixir,True
+embedded,Embedded,True,Embedded,Development,front_office,Embedded Developer,True
+engineering_manager,Engineering Manager,True,PM,Management,front_office,PM,True
+erp_systems,ERP Systems,True,ERP,Development,front_office,ERP,True
+finance_manager,Finance Manager,True,Finance,Finance,back_office,Finance,True
+finances,Finances,True,Finance,Finance,back_office,Finance,True
+financial_analyst,Financial Analyst,True,Finance,Finance,back_office,Finance,True
+finops,FinOps,True,,,,,False
+firmware,Firmware Engineer,True,,,,,False
+flutter,Flutter,True,Mobile Hybrid,Development,front_office,Mobile Hybrid,True
+fpga,FPGA Engineer,True,,,,,False
+fullstack,Fullstack,True,Fullstack,Development,front_office,Fullstack,True
+game_design,Game Design,True,Gamedev,Development,front_office,Gamedev,True
+game_developer,Game Developer,True,Gamedev,Development,front_office,Gamedev,True
+gamedev,Gamedev,True,Gamedev,Development,front_office,Gamedev,True
+golang,Golang,True,Go,Development,front_office,Go,True
+graphic_design,Graphic Design,True,Graphic Designer,Design,back_office,Graphic Designer,True
+hardware,Hardware,True,,,,,False
+hardware_engineer,Hardware Engineer,True,,,,,False
+head_chief,Head / Chief,True,Head Chief,Executive,back_office,Head Chief,True
+hr,HR,True,HR,Human Resources,back_office,HR,True
+illustrator,Illustrator,True,Graphic Designer,Design,back_office,Graphic Designer,True
+information_security,Information Security,True,Security,IT Support,back_office,Security,True
+ios,iOS,True,Mobile Native,Development,front_office,Mobile IOS,True
+java,Java,True,Java,Development,front_office,BE Java; FS Java,True
+javascript,JavaScript / Front-End,True,JS FE,Development,front_office,JS FE; FE,True
+kotlin,,False,Kotlin,Development,front_office,Kotlin,True
+laravel,Laravel,True,PHP,Development,front_office,PHP,True
+lead,Tech Leadership,True,Lead,Executive,back_office,Lead,True
+lead_generation,Lead Generation,True,Sales,Sales,back_office,Sales,True
+level_design,Level Design,True,,,,,False
+magento,Magento,True,PHP,Development,front_office,PHP,True
+marketing,Marketing,True,Marketing,Marketing,back_office,Marketing,True
+marketing_analyst,Marketing Analyst,True,Marketing,Marketing,back_office,Marketing,True
+markup,Markup,True,,,,,False
+maui,MAUI,True,FS .Net,Development,front_office,FS .Net,True
+media_buying,Media Buying,True,Marketing,Marketing,back_office,Marketing,True
+military_software,Military Software / C4ISR,True,,,,,False
+ml_ai,ML / AI,True,Data Scientist AI,Development,front_office,Data Scientist AI,True
+motion_design,Motion Design,True,Motion Designer,Design,back_office,Motion Designer,True
+ms_dynamics,MS Dynamics / Business Central,True,ERP,Development,front_office,ERP,True
+nocode,,False,Nocode,Development,front_office,Nocode,True
+node_js,Node.js,True,FS Node,Development,front_office,FS Node; BE Node,True
+odoo,Odoo,True,ERP,Development,front_office,ERP,True
+penetration_tester,Penetration Tester,True,Security,IT Support,back_office,Security,True
+performance_marketing,Performance Marketing,True,,,,,False
+php,PHP,True,PHP,Development,front_office,FS PHP,True
+ppc,PPC,True,Marketing,Marketing,back_office,Marketing,True
+pr_manager,PR Manager,True,Marketing,Marketing,back_office,Marketing,True
+product_design,Product Design,True,Design,Design,back_office,Design,True
+product_manager,Product Manager,True,PM,Management,front_office,PM,True
+product_owner,Product Owner,True,PM,Management,front_office,PM,True
+project_manager,Project Manager,True,PM,Management,front_office,PM,True
+python,Python,True,Python,Development,front_office,FS Python; BE Python,True
+qa,QA,True,QA,Quality Assurance,front_office,QA,True
+qa_automation,QA Automation,True,QA,Quality Assurance,front_office,QA,True
+qa_hardware,QA Hardware / Embedded,True,,,,,False
+qa_manual,QA Manual,True,QA,Quality Assurance,front_office,QA,True
+react,React.js,True,JS FE,Development,front_office,JS FE; FE,True
+react_native,React Native,True,Mobile Native,Development,front_office,Mobile Native,True
+recruiter,Recruiter,True,Recruiter,Human Resources,back_office,Recruiter,True
+rf_engineer,RF Engineer,True,,,,,False
+robotics,Robotics Engineer,True,,,,,False
+ruby,Ruby,True,Ruby,Development,front_office,Ruby,True
+rust,Rust,True,Rust,Development,front_office,Rust,True
+sales,Sales,True,Sales,Sales,back_office,Sales,True
+sales_leadership,Sales Leadership,True,Sales,Sales,back_office,,True
+sales_manager,Sales Manager,True,Sales,Sales,back_office,,True
+salesforce,Salesforce,True,ERP,Development,front_office,ERP,True
+sap,SAP,True,ERP,Development,front_office,BE Hybris,True
+scala,Scala,True,Scala,Development,front_office,Scala,True
+scrum_master,Scrum Master / Agile Coach,True,PM,Management,front_office,PM,True
+security,Security,True,Security,IT Support,back_office,Security,True
+security_analyst,Security Analyst,True,Security,IT Support,back_office,Security,True
+seo,SEO,True,Marketing,Marketing,back_office,Marketing,True
+social_media,Social Media,True,Marketing,Marketing,back_office,Marketing,True
+sql_dba,SQL / DBA,True,Data Analyst,Development,front_office,Data Analyst,True
+support,Customer/Technical Support,True,Security,IT Support,back_office,Security,True
+svelte,Svelte,True,JS FE,Development,front_office,JS FE,True
+symfony,Symfony,True,PHP,Development,front_office,PHP,True
+sysadmin,Sysadmin,True,Sysadmin,IT Support,back_office,Sysadmin,True
+technical_writing,Technical Writing,True,,,,,False
+uav_drone,UAV / Drone Engineer,True,,,,,False
+uav_drone_pilot,UAV / Drone Pilot,True,,,,,False
+ui_ux,UI/UX,True,UI/UX Designer,Design,back_office,UI\UX Designer,True
+unity,Unity Developer,True,Gamedev,Development,front_office,Gamedev,True
+unreal,Unreal Developer,True,Gamedev,Development,front_office,Gamedev,True
+ux_research,UX Research,True,UI/UX Designer,Design,back_office,UI\UX Designer,True
+vfx_artist,VFX Artist,True,,,,,False
+video_editor,Video Editor,True,,,,,False
+vue,Vue.js,True,JS FE,Development,front_office,JS FE,True
+weapons_systems,Weapons Systems,True,,,,,False
+winforms,WinForms,True,FS .Net,Development,front_office,winforms,True
+wordpress,WordPress,True,Web,Development,front_office,Web,True
+wpf,WPF,True,FS .Net,Development,front_office,wpf,True
+xamarin,Xamarin,True,Xamarin,Development,front_office,Xamarin,True
+yii,Yii,True,PHP,Development,front_office,PHP,True
