@@ -62,13 +62,26 @@ jobs:
           FORCE: ${{ inputs.force }}
           EVENT: ${{ github.event_name }}
         run: |
+          if [ -n "$CATS" ]; then
+            # smoke test: separate dir, never touches the data buffer or gh-pages
+            python -m djinni_market.run --out smoke --categories "$CATS"
+            exit 0
+          fi
           ARGS="--out store --keep-days 7"
-          # nightly run always (re)writes today, so a daytime smoke test never blocks it
-          if [ "$EVENT" = "schedule" ] || [ "$FORCE" = "true" ] || [ -n "$CATS" ]; then ARGS="$ARGS --force"; fi
-          if [ -n "$CATS" ]; then ARGS="$ARGS --categories $CATS"; fi
+          # nightly run always (re)writes today: one file per day, so a rerun replaces, never duplicates
+          if [ "$EVENT" = "schedule" ] || [ "$FORCE" = "true" ]; then ARGS="$ARGS --force"; fi
           python -m djinni_market.run $ARGS
 
+      - name: Upload smoke result
+        if: ${{ inputs.categories != '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: smoke-${{ github.run_id }}
+          path: smoke
+          retention-days: 7
+
       - name: Push data buffer (single commit, history discarded)
+        if: ${{ inputs.categories == '' }}
         run: |
           rm -rf /tmp/push && mkdir /tmp/push && cp -r store/. /tmp/push/ && rm -rf /tmp/push/.git
           cd /tmp/push
@@ -78,9 +91,11 @@ jobs:
           git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" data
 
       - name: Build published files
+        if: ${{ inputs.categories == '' }}
         run: python -m djinni_market.export --data store --prev prev/salaries_compat.csv --out public
 
       - name: Publish to gh-pages
+        if: ${{ inputs.categories == '' }}
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
