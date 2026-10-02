@@ -14,6 +14,10 @@ on:
         description: 'Re-collect today even if already present'
         type: boolean
         default: false
+      categories:
+        description: 'Smoke test: comma list of categories only (overwrites today; the nightly run replaces it)'
+        type: string
+        default: ''
 
 permissions:
   contents: write
@@ -53,7 +57,16 @@ jobs:
           fi
 
       - name: Scrape
-        run: python -m djinni_market.run --out store --keep-days 7 ${{ inputs.force && '--force' || '' }}
+        env:
+          CATS: ${{ inputs.categories }}
+          FORCE: ${{ inputs.force }}
+          EVENT: ${{ github.event_name }}
+        run: |
+          ARGS="--out store --keep-days 7"
+          # nightly run always (re)writes today, so a daytime smoke test never blocks it
+          if [ "$EVENT" = "schedule" ] || [ "$FORCE" = "true" ] || [ -n "$CATS" ]; then ARGS="$ARGS --force"; fi
+          if [ -n "$CATS" ]; then ARGS="$ARGS --categories $CATS"; fi
+          python -m djinni_market.run $ARGS
 
       - name: Push data buffer (single commit, history discarded)
         run: |
