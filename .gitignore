@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+# daily data lives on the `data` branch (rolling 7 days), never on main
+data/
+store/
+prev/
+public/
+tmp_*/
+*.log
+.env

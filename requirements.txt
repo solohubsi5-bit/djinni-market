@@ -1,0 +1,6 @@
+requests>=2.32
+beautifulsoup4>=4.12
+pandas>=2.2
+pyarrow>=17
+openpyxl>=3.1
+pytest>=8

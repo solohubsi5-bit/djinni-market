@@ -1,0 +1,76 @@
+name: Daily Djinni scrape
+
+# main     = code only
+# data     = rolling 7-day buffer of daily parquet (single orphan commit, force-pushed) -
+#            the server-side DB loader pulls from here; survives a few days of server downtime
+# gh-pages = published files incl. the old-format compat xlsx/csv (full history carried forward)
+
+on:
+  schedule:
+    - cron: '30 23 * * *'   # 02:30 Kyiv (summer) - quiet hours, after Djinni's nightly recalculation
+  workflow_dispatch:
+    inputs:
+      force:
+        description: 'Re-collect today even if already present'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: scrape
+  cancel-in-progress: false
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      - name: Parser tests (fail fast on a Djinni layout change)
+        run: python -m pytest -q
+
+      - name: Check out data buffer and previous publish
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git fetch --depth 1 origin data; then
+            git worktree add store FETCH_HEAD --detach
+          else
+            mkdir store
+          fi
+          if git fetch --depth 1 origin gh-pages; then
+            git worktree add prev FETCH_HEAD --detach
+          fi
+
+      - name: Scrape
+        run: python -m djinni_market.run --out store --keep-days 7 ${{ inputs.force && '--force' || '' }}
+
+      - name: Push data buffer (single commit, history discarded)
+        run: |
+          rm -rf /tmp/push && mkdir /tmp/push && cp -r store/. /tmp/push/ && rm -rf /tmp/push/.git
+          cd /tmp/push
+          git init -q -b data
+          git add -A
+          git commit -q -m "data window ending $(date -u +%F)"
+          git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" data
+
+      - name: Build published files
+        run: python -m djinni_market.export --data store --prev prev/salaries_compat.csv --out public
+
+      - name: Publish to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
+          force_orphan: true
+          commit_message: 'publish'
