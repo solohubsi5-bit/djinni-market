@@ -1,0 +1,68 @@
+{
+ "date": "2026-10-02",
+ "finished_utc": "2026-10-03T00:06:20+00:00",
+ "status": "ok",
+ "pages": 8785,
+ "ok": 8785,
+ "errors": 0,
+ "seconds": 1736,
+ "breaker_open": false,
+ "per_level": {
+  "1": {
+   "fetched": 882,
+   "expandable": 615,
+   "errors": 0
+  },
+  "2": {
+   "fetched": 2460,
+   "expandable": 1233,
+   "errors": 0
+  },
+  "3": {
+   "fetched": 1233,
+   "expandable": 872,
+   "errors": 0
+  },
+  "4": {
+   "fetched": 4210,
+   "expandable": 3265,
+   "errors": 0
+  }
+ },
+ "config_values_missing": {},
+ "filter_changes": {},
+ "unmapped_categories": [
+  "account_manager",
+  "advertising",
+  "architect",
+  "artist",
+  "asic_design",
+  "avionics",
+  "business_development",
+  "cso",
+  "deftech",
+  "dotnet_gamedev",
+  "electronic_warfare",
+  "finops",
+  "firmware",
+  "fpga",
+  "hardware",
+  "hardware_engineer",
+  "level_design",
+  "markup",
+  "military_software",
+  "performance_marketing",
+  "qa_hardware",
+  "rf_engineer",
+  "robotics",
+  "technical_writing",
+  "uav_drone",
+  "uav_drone_pilot",
+  "vfx_artist",
+  "video_editor",
+  "weapons_systems"
+ ],
+ "candidate_drops": [],
+ "error_kinds": {},
+ "error_samples": []
+}

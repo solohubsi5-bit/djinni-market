@@ -1,0 +1,147 @@
+category,display_name,first_seen,last_seen
+2d_animation,2D Animation,2026-10-02,2026-10-02
+2d_artist,2D Artist,2026-10-02,2026-10-02
+3d_animation,3D Animation,2026-10-02,2026-10-02
+3d_artist,3D Artist,2026-10-02,2026-10-02
+account_manager,Account Manager,2026-10-02,2026-10-02
+accountant,Accountant,2026-10-02,2026-10-02
+advertising,Advertising,2026-10-02,2026-10-02
+affiliate_manager,Affiliate Manager,2026-10-02,2026-10-02
+android,Android,2026-10-02,2026-10-02
+angular,Angular,2026-10-02,2026-10-02
+architect,Software Architect,2026-10-02,2026-10-02
+artist,2D/3D Artist / Illustrator,2026-10-02,2026-10-02
+asic_design,ASIC / Chip Design,2026-10-02,2026-10-02
+asp_net,ASP.NET,2026-10-02,2026-10-02
+avionics,Avionics,2026-10-02,2026-10-02
+blazor,Blazor,2026-10-02,2026-10-02
+business_analyst,Business Analyst,2026-10-02,2026-10-02
+business_development,Business Development,2026-10-02,2026-10-02
+c,C,2026-10-02,2026-10-02
+cbdo,Chief Business Development Officer (CBDO),2026-10-02,2026-10-02
+cco,Chief Commercial Officer (CCO),2026-10-02,2026-10-02
+ceo,Chief Executive Officer (CEO),2026-10-02,2026-10-02
+cfo,Chief Financial Officer (CFO),2026-10-02,2026-10-02
+cio,Chief Information Officer (CIO),2026-10-02,2026-10-02
+cmo,Chief Marketing Officer (CMO),2026-10-02,2026-10-02
+content_design,Content Design / UX writer,2026-10-02,2026-10-02
+content_manager,Content Manager,2026-10-02,2026-10-02
+content_marketing,Content Marketing,2026-10-02,2026-10-02
+content_writing,Content Writer / Copywriter / Editor,2026-10-02,2026-10-02
+coo,Chief Operating Officer (COO),2026-10-02,2026-10-02
+cplusplus,C / C++ / Embedded,2026-10-02,2026-10-02
+cpo,Chief Product Officer (CPO),2026-10-02,2026-10-02
+cpp,C++,2026-10-02,2026-10-02
+cso,Chief Security Officer (CSO),2026-10-02,2026-10-02
+cto,CTO,2026-10-02,2026-10-02
+data_analyst,Data Analyst,2026-10-02,2026-10-02
+data_engineer,Data Engineer,2026-10-02,2026-10-02
+data_science,Data Science,2026-10-02,2026-10-02
+deftech,DefTech,2026-10-02,2026-10-02
+delivery_manager,Delivery Manager,2026-10-02,2026-10-02
+design,Design,2026-10-02,2026-10-02
+dev_ops,DevOps,2026-10-02,2026-10-02
+digital_marketing,Digital Marketing,2026-10-02,2026-10-02
+digital_marketing_manager,Digital Marketing Manager,2026-10-02,2026-10-02
+dotnet,C# / .NET,2026-10-02,2026-10-02
+dotnet_cloud,Server & Cloud,2026-10-02,2026-10-02
+dotnet_desktop,Desktop Apps,2026-10-02,2026-10-02
+dotnet_gamedev,.NET Gamedev,2026-10-02,2026-10-02
+dotnet_mobile,Mobile Apps,2026-10-02,2026-10-02
+dotnet_web,Web Apps,2026-10-02,2026-10-02
+drupal,Drupal,2026-10-02,2026-10-02
+electronic_warfare,Electronic Warfare,2026-10-02,2026-10-02
+embedded,Embedded,2026-10-02,2026-10-02
+engineering_manager,Engineering Manager,2026-10-02,2026-10-02
+erp_systems,ERP Systems,2026-10-02,2026-10-02
+finance_manager,Finance Manager,2026-10-02,2026-10-02
+finances,Finances,2026-10-02,2026-10-02
+financial_analyst,Financial Analyst,2026-10-02,2026-10-02
+finops,FinOps,2026-10-02,2026-10-02
+firmware,Firmware Engineer,2026-10-02,2026-10-02
+flutter,Flutter,2026-10-02,2026-10-02
+fpga,FPGA Engineer,2026-10-02,2026-10-02
+fullstack,Fullstack,2026-10-02,2026-10-02
+game_design,Game Design,2026-10-02,2026-10-02
+game_developer,Game Developer,2026-10-02,2026-10-02
+gamedev,Gamedev,2026-10-02,2026-10-02
+golang,Golang,2026-10-02,2026-10-02
+graphic_design,Graphic Design,2026-10-02,2026-10-02
+hardware,Hardware,2026-10-02,2026-10-02
+hardware_engineer,Hardware Engineer,2026-10-02,2026-10-02
+head_chief,Head / Chief,2026-10-02,2026-10-02
+hr,HR,2026-10-02,2026-10-02
+illustrator,Illustrator,2026-10-02,2026-10-02
+information_security,Information Security,2026-10-02,2026-10-02
+ios,iOS,2026-10-02,2026-10-02
+java,Java,2026-10-02,2026-10-02
+javascript,JavaScript / Front-End,2026-10-02,2026-10-02
+laravel,Laravel,2026-10-02,2026-10-02
+lead,Tech Leadership,2026-10-02,2026-10-02
+lead_generation,Lead Generation,2026-10-02,2026-10-02
+level_design,Level Design,2026-10-02,2026-10-02
+magento,Magento,2026-10-02,2026-10-02
+marketing,Marketing,2026-10-02,2026-10-02
+marketing_analyst,Marketing Analyst,2026-10-02,2026-10-02
+markup,Markup,2026-10-02,2026-10-02
+maui,MAUI,2026-10-02,2026-10-02
+media_buying,Media Buying,2026-10-02,2026-10-02
+military_software,Military Software / C4ISR,2026-10-02,2026-10-02
+ml_ai,ML / AI,2026-10-02,2026-10-02
+motion_design,Motion Design,2026-10-02,2026-10-02
+ms_dynamics,MS Dynamics / Business Central,2026-10-02,2026-10-02
+node_js,Node.js,2026-10-02,2026-10-02
+odoo,Odoo,2026-10-02,2026-10-02
+penetration_tester,Penetration Tester,2026-10-02,2026-10-02
+performance_marketing,Performance Marketing,2026-10-02,2026-10-02
+php,PHP,2026-10-02,2026-10-02
+ppc,PPC,2026-10-02,2026-10-02
+pr_manager,PR Manager,2026-10-02,2026-10-02
+product_design,Product Design,2026-10-02,2026-10-02
+product_manager,Product Manager,2026-10-02,2026-10-02
+product_owner,Product Owner,2026-10-02,2026-10-02
+project_manager,Project Manager,2026-10-02,2026-10-02
+python,Python,2026-10-02,2026-10-02
+qa,QA,2026-10-02,2026-10-02
+qa_automation,QA Automation,2026-10-02,2026-10-02
+qa_hardware,QA Hardware / Embedded,2026-10-02,2026-10-02
+qa_manual,QA Manual,2026-10-02,2026-10-02
+react,React.js,2026-10-02,2026-10-02
+react_native,React Native,2026-10-02,2026-10-02
+recruiter,Recruiter,2026-10-02,2026-10-02
+rf_engineer,RF Engineer,2026-10-02,2026-10-02
+robotics,Robotics Engineer,2026-10-02,2026-10-02
+ruby,Ruby,2026-10-02,2026-10-02
+rust,Rust,2026-10-02,2026-10-02
+sales,Sales,2026-10-02,2026-10-02
+sales_leadership,Sales Leadership,2026-10-02,2026-10-02
+sales_manager,Sales Manager,2026-10-02,2026-10-02
+salesforce,Salesforce,2026-10-02,2026-10-02
+sap,SAP,2026-10-02,2026-10-02
+scala,Scala,2026-10-02,2026-10-02
+scrum_master,Scrum Master / Agile Coach,2026-10-02,2026-10-02
+security,Security,2026-10-02,2026-10-02
+security_analyst,Security Analyst,2026-10-02,2026-10-02
+seo,SEO,2026-10-02,2026-10-02
+social_media,Social Media,2026-10-02,2026-10-02
+sql_dba,SQL / DBA,2026-10-02,2026-10-02
+support,Customer/Technical Support,2026-10-02,2026-10-02
+svelte,Svelte,2026-10-02,2026-10-02
+symfony,Symfony,2026-10-02,2026-10-02
+sysadmin,Sysadmin,2026-10-02,2026-10-02
+technical_writing,Technical Writing,2026-10-02,2026-10-02
+uav_drone,UAV / Drone Engineer,2026-10-02,2026-10-02
+uav_drone_pilot,UAV / Drone Pilot,2026-10-02,2026-10-02
+ui_ux,UI/UX,2026-10-02,2026-10-02
+unity,Unity Developer,2026-10-02,2026-10-02
+unreal,Unreal Developer,2026-10-02,2026-10-02
+ux_research,UX Research,2026-10-02,2026-10-02
+vfx_artist,VFX Artist,2026-10-02,2026-10-02
+video_editor,Video Editor,2026-10-02,2026-10-02
+vue,Vue.js,2026-10-02,2026-10-02
+weapons_systems,Weapons Systems,2026-10-02,2026-10-02
+winforms,WinForms,2026-10-02,2026-10-02
+wordpress,WordPress,2026-10-02,2026-10-02
+wpf,WPF,2026-10-02,2026-10-02
+xamarin,Xamarin,2026-10-02,2026-10-02
+yii,Yii,2026-10-02,2026-10-02
