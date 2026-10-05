@@ -77,7 +77,8 @@ def _write_day(data_dir: Path, d: str, status: str = "ok"):
     snap = pd.DataFrame([{
         "scrape_date": d, "category": "python", "exp": "", "english_level": "",
         "region": "", "work_format": "", "level": 1,
-        "candidates_online": 10, "candidates_delta_30d": 1, "cand_expect_min": 1000.0,
+        "candidates_online": 10, "candidates_delta_30d": 1, "candidates_metric": "active_4w",
+        "cand_expect_min": 1000.0,
         "cand_expect_max": 2000.0, "offers_per_candidate": 0.5, "calculated_at": f"{d}T00:00:00",
         "jobs_online": 5, "jobs_delta_30d": 0, "job_fork_min": 900.0, "job_fork_max": 1800.0,
         "applies_per_job_online": 3.0, "djinni_index_30d": 0.1, "djinni_index_delta": 0.0,
@@ -175,6 +176,62 @@ def test_load_mapping_is_full_replace(pg_dsn, tmp_path):
         with conn.cursor() as cur:
             cur.execute("SELECT category FROM raw.category_role_mapping")
             assert [r[0] for r in cur.fetchall()] == ["java"]
+
+
+def test_load_date_persists_candidates_metric_from_parquet(pg_dsn, tmp_path):
+    data_dir = tmp_path / "data"
+    _write_day(data_dir, "2026-10-07")  # _write_day's fixture row carries candidates_metric="active_4w"
+    with psycopg.connect(pg_dsn, autocommit=False) as conn:
+        load.load_date(conn, data_dir, date(2026, 10, 7), "abc1234")
+        conn.commit()
+        with conn.cursor() as cur:
+            cur.execute(
+                "SELECT candidates_metric FROM raw.snapshot WHERE scrape_date = %s", (date(2026, 10, 7),)
+            )
+            assert cur.fetchone()[0] == "active_4w"
+
+
+def test_candidates_metric_backfill_and_series_break(pg_dsn):
+    # Rows inserted directly (bypassing the loader) simulate history that was loaded by the
+    # pre-this-slice loader, i.e. before candidates_metric existed in SNAPSHOT_COLS -> NULL.
+    migration_sql = (
+        Path(__file__).resolve().parent.parent / "db" / "migrations" / "0003_candidates_metric.sql"
+    ).read_text(encoding="utf-8")
+    with psycopg.connect(pg_dsn, autocommit=True) as conn:
+        with conn.cursor() as cur:
+            # distinct category ("ci-metric-test") so this doesn't collide on the
+            # (scrape_date, category, ...) primary key with rows other tests in this module
+            # already loaded for 2026-10-02/2026-10-05 under category "python".
+            for d in ("2026-10-02", "2026-10-04", "2026-10-06"):
+                cur.execute(
+                    "INSERT INTO raw.snapshot (scrape_date, category, exp, english_level, region, "
+                    "work_format, level, candidates_online, cand_salary_p25, cand_salary_p75, jobs_online) "
+                    "VALUES (%s, 'ci-metric-test', '', '', '', '', 1, 10, 1000, 2000, 5)",
+                    (d,),
+                )
+            # Re-running the real (idempotent) migration file is what exercises the backfill
+            # against these newly-inserted NULL rows -- the fixture's own apply_all() pass ran
+            # it once already, against an empty table.
+            cur.execute("SET ROLE djinni_owner")
+            cur.execute(migration_sql)
+
+            cur.execute(
+                "SELECT scrape_date, candidates_metric FROM raw.snapshot "
+                "WHERE category = 'ci-metric-test' ORDER BY scrape_date"
+            )
+            by_date = dict(cur.fetchall())
+            assert by_date[date(2026, 10, 2)] == "online"
+            assert by_date[date(2026, 10, 4)] is None  # transition day: deliberately not backfilled
+            assert by_date[date(2026, 10, 6)] == "active_4w"
+
+            cur.execute(
+                "SELECT scrape_date, series_break FROM mart.v_salaries_compat "
+                "WHERE category = 'ci-metric-test' ORDER BY scrape_date"
+            )
+            breaks = dict(cur.fetchall())
+            assert breaks[date(2026, 10, 2)] is False
+            assert breaks[date(2026, 10, 4)] is False
+            assert breaks[date(2026, 10, 6)] is True
 
 
 def test_load_legacy_on_conflict_do_nothing(pg_dsn, tmp_path):

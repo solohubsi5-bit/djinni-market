@@ -1,0 +1,79 @@
+# Nightly Djinni scrape, moved here from .github/workflows/daily.yml (kept running in
+# parallel on GitHub for one night before that workflow is removed — do not delete it as part
+# of this change).
+#
+# main     = code only
+# data     = rolling 7-day buffer of daily parquet (single orphan commit, force-pushed) -
+#            the server-side DB loader pulls from here; survives a few days of server downtime
+# gh-pages = published xlsx/csv on GitHub Pages — GitLab has no equivalent static-pages
+#            publish target wired up yet. DECISION NEEDED (owner): this job does NOT publish
+#            gh-pages; it only pushes the `data` branch. Options: (a) keep gh-pages publishing
+#            on the GitHub workflow only (asymmetric, simplest, what this slice ships), (b) add
+#            GitLab Pages here later, (c) drop the xlsx/csv publish entirely if nothing still
+#            consumes it. Not decided as part of this slice.
+
+variables:
+  GIT_DEPTH: "1"
+  # Set on a manual ("web") run to smoke-test specific categories instead of a full nightly
+  # scrape, and/or to control --force, mirroring daily.yml's workflow_dispatch inputs.
+  SCRAPE_CATEGORIES: ""
+  SCRAPE_FORCE: "true"
+
+scrape:
+  image: python:3.11-slim
+  timeout: 2h
+  interruptible: false
+  # Only a schedule (the nightly trigger) or a manual "web" run on main ever executes this
+  # job — never a plain push, so pushing code can never accidentally kick off a scrape.
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule" && $CI_COMMIT_BRANCH == "main"'
+    - if: '$CI_PIPELINE_SOURCE == "web" && $CI_COMMIT_BRANCH == "main"'
+  before_script:
+    - apt-get update -qq && apt-get install -y -qq --no-install-recommends git ca-certificates > /dev/null
+    - pip install --quiet -r requirements.txt
+  script:
+    # Parser tests (fail fast on a Djinni layout change) — same gate as daily.yml.
+    - python -m pytest -q
+    - git config --global user.name "gitlab-ci"
+    - git config --global user.email "gitlab-ci@git.aimprosoft.com"
+    - |
+      if [ -n "$SCRAPE_CATEGORIES" ]; then
+        # smoke test: separate dir, never touches the data buffer; nothing to push after.
+        python -m djinni_market.run --out smoke --categories "$SCRAPE_CATEGORIES"
+        exit 0
+      fi
+    - |
+      if git fetch origin data --depth 1; then
+        git worktree add store FETCH_HEAD --detach
+      else
+        mkdir store
+      fi
+    - |
+      ARGS="--out store --keep-days 7"
+      if [ "$SCRAPE_FORCE" = "true" ]; then ARGS="$ARGS --force"; fi
+      python -m djinni_market.run $ARGS
+  after_script:
+    # Runs even if the `script:` block above failed partway (mirrors daily.yml's
+    # `if: always() && hashFiles('store/run_report.json') != ''`): data files are unchanged
+    # then, but run_report.json explains what broke, and whatever was already written is
+    # still worth pushing. Never echoes the push URL and never uses `set -x`: the token only
+    # ever appears via normal GitLab CI variable interpolation, and DATA_PUSH_TOKEN is
+    # configured as a masked CI/CD variable so it's redacted from the job log even if some
+    # error message happened to include it.
+    - |
+      if [ -f store/run_report.json ] && [ -n "$DATA_PUSH_TOKEN" ]; then
+        rm -rf /tmp/push && mkdir -p /tmp/push && cp -r store/. /tmp/push/ && rm -rf /tmp/push/.git
+        cd /tmp/push
+        git init -q -b data
+        git add -A
+        git -c user.name="gitlab-ci" -c user.email="gitlab-ci@git.aimprosoft.com" \
+            commit -q -m "data window ending $(date -u +%F)"
+        git remote add dest "https://oauth2:${DATA_PUSH_TOKEN}@git.aimprosoft.com/finance/djinni-market.git"
+        git push -f dest data
+        git remote remove dest
+      fi
+  artifacts:
+    when: always
+    expire_in: 14 days
+    paths:
+      - store/run_report.json
