@@ -84,11 +84,24 @@ def read_run_status(data_dir: Path, d: date) -> str | None:
     runs_csv = data_dir / "runs.csv"
     if not runs_csv.exists():
         return None
+    # runs.csv drifted: its header has no `status` column (date,finished_utc,pages,ok,errors,seconds,per_level)
+    # while newer rows carry an extra status field at index 2. Read positionally; the LAST row for the date wins
+    # (a day can be re-run). Old-format rows (no status field) count as "ok" when errors == 0 and ok > 0.
+    status = None
     with runs_csv.open(encoding="utf-8", newline="") as f:
-        for row in csv.DictReader(f):
-            if row.get("date") == d.isoformat():
-                return row.get("status")
-    return None
+        reader = csv.reader(f)
+        next(reader, None)
+        for row in reader:
+            if not row or row[0] != d.isoformat():
+                continue
+            if len(row) >= 8:
+                status = row[2]
+            elif len(row) == 7:
+                try:
+                    status = "ok" if int(row[4]) == 0 and int(row[3]) > 0 else "error"
+                except ValueError:
+                    status = None
+    return status
 
 
 def loaded_dates(cur) -> set[date]:

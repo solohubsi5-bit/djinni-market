@@ -75,3 +75,18 @@ def test_read_categories_csv_missing_file(tmp_path):
 @pytest.mark.parametrize("cols", [load.SNAPSHOT_COLS, load.HISTOGRAM_COLS, load.MONTHLY_SRC_COLS, load.LEGACY_COLS])
 def test_column_tuples_have_no_duplicates(cols):
     assert len(cols) == len(set(cols))
+
+
+def test_read_run_status_real_drifted_header(tmp_path):
+    # The real runs.csv header has no `status` column, but newer rows carry one at index 2; last row per date wins.
+    (tmp_path / "runs.csv").write_text(
+        "date,finished_utc,pages,ok,errors,seconds,per_level\n"
+        '2026-10-02,2026-10-02T07:26:32+00:00,158,158,0,46,"{}"\n'
+        '2026-10-02,2026-10-03T00:06:20+00:00,ok,8785,8785,0,1736,"{}"\n'
+        '2026-10-04,2026-10-04T03:42:40+00:00,partial,6880,6800,80,2509,"{}"\n'
+        '2026-10-05,2026-10-05T03:42:40+00:00,100,90,10,25,"{}"\n',
+        encoding="utf-8",
+    )
+    assert load.read_run_status(tmp_path, date(2026, 10, 2)) == "ok"
+    assert load.read_run_status(tmp_path, date(2026, 10, 4)) == "partial"
+    assert load.read_run_status(tmp_path, date(2026, 10, 5)) == "error"
