@@ -51,7 +51,11 @@ MONTHLY_SRC_COLS = (
 def _rows(df: pd.DataFrame, cols: tuple[str, ...]) -> list[tuple]:
     """DataFrame -> list of tuples in `cols` order, NaN/NaT -> None (psycopg needs None, not NaN)."""
     sub = df[list(cols)].astype(object).where(df[list(cols)].notna(), None)
-    return [tuple(r) for r in sub.itertuples(index=False, name=None)]
+    # An int column with gaps arrives as float64 (e.g. -624.0); COPY into an INTEGER column rejects "-624.0".
+    # Whole-number floats go out as int; real fractions stay float.
+    def _v(x):
+        return int(x) if isinstance(x, float) and x.is_integer() else x
+    return [tuple(_v(x) for x in r) for r in sub.itertuples(index=False, name=None)]
 
 
 # --------------------------------------------------------------- git checkout ----

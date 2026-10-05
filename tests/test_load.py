@@ -90,3 +90,9 @@ def test_read_run_status_real_drifted_header(tmp_path):
     assert load.read_run_status(tmp_path, date(2026, 10, 2)) == "ok"
     assert load.read_run_status(tmp_path, date(2026, 10, 4)) == "partial"
     assert load.read_run_status(tmp_path, date(2026, 10, 5)) == "error"
+
+
+def test_rows_whole_floats_become_int():
+    import pandas as pd
+    df = pd.DataFrame({"a": [-624.0, None, 3.5]})
+    assert load._rows(df, ("a",)) == [(-624,), (None,), (3.5,)]
