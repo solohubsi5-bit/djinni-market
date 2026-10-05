@@ -1,0 +1,11 @@
+[Unit]
+Description=djinni-market: daily load timer (07:30 UTC — after the 23:30 UTC scrape lands, before any later job)
+
+[Timer]
+# Explicit UTC suffix so this doesn't depend on the box's local timezone setting.
+OnCalendar=*-*-* 07:30:00 UTC
+Persistent=true
+RandomizedDelaySec=120
+
+[Install]
+WantedBy=timers.target
