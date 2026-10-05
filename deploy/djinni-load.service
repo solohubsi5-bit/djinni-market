@@ -1,0 +1,33 @@
+[Unit]
+Description=djinni-market: load the data branch's daily parquet into Postgres (djinni_market)
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=djinni
+Group=djinni
+EnvironmentFile=/etc/djinni/load.env
+WorkingDirectory=/opt/djinni-market
+ExecStart=/opt/djinni-market/.venv/bin/python -m djinni_market.load --data-dir /var/lib/djinni-market/data-clone
+
+Nice=10
+MemoryMax=512M
+TimeoutStartSec=600
+
+# Sandboxing (typical oneshot hardening; only the clone dir needs to be writable).
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+RestrictRealtime=true
+LockPersonality=true
+ReadWritePaths=/var/lib/djinni-market
+
+[Install]
+WantedBy=multi-user.target
