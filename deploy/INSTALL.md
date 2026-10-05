@@ -107,6 +107,39 @@ psql "host=localhost port=5433 dbname=djinni_market" -c \
 Rows per snapshot date should roughly match the `ok` column in the `data` branch's
 `runs.csv` for that date (±expandable-slice variance).
 
+## Switching the `data` branch source from GitHub to GitLab
+
+The loader's `--clone-url` / `ensure_data_checkout()` default stays the public GitHub mirror
+until this step is done, so nothing breaks before the switch. GitLab CI (`.gitlab-ci.yml`)
+pushes the `data` branch to `git.aimprosoft.com` starting the night that pipeline is enabled;
+once that's confirmed landing, point the server's loader at it instead:
+
+1. The server can only resolve `git.aimprosoft.com` via company DNS; if it's on a network that
+   doesn't reach that DNS, add the host entry as root:
+   ```sh
+   echo "192.168.180.24 git.aimprosoft.com" >> /etc/hosts
+   ```
+2. Add two lines to `/etc/djinni/load.env` (same file as `DJINNI_PG_DSN`, mode 600, never
+   echoed to a terminal):
+   ```sh
+   printf 'DJINNI_DATA_URL=https://git.aimprosoft.com/finance/djinni-market.git\n' >> /etc/djinni/load.env
+   printf 'DJINNI_DATA_TOKEN=%s\n' "$DATA_READ_TOKEN" >> /etc/djinni/load.env
+   unset DATA_READ_TOKEN
+   ```
+   `DJINNI_DATA_TOKEN` only needs `read_repository` scope (the loader only fetches `data`,
+   never pushes) — use a separate project access token from the one GitLab CI uses to push
+   (`DATA_PUSH_TOKEN`, `write_repository`, configured as a masked+protected CI/CD variable).
+3. Delete the existing local clone so the next run does a fresh `git clone` against the new
+   URL/credential rather than `fetch`+`checkout` against the old GitHub-based remote:
+   ```sh
+   rm -rf /var/lib/djinni-market/data-clone
+   ```
+4. Run step 6 ("First manual run") again, or wait for the next timer tick, and confirm via
+   step 7 that dates keep loading.
+5. Keep the GitHub Actions workflow (`.github/workflows/daily.yml`) running for one more night
+   in parallel before removing it, per the owner's instruction — don't delete it as part of
+   this switch.
+
 ## Rollback
 
 ```sh

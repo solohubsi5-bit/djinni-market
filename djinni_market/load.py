@@ -18,18 +18,26 @@ import csv
 import os
 import subprocess
 import sys
+import tempfile
 from datetime import date
 from pathlib import Path
+from urllib.parse import urlsplit, urlunsplit
 
 import pandas as pd
 import psycopg
 
 DEFAULT_CLONE_URL = "https://github.com/solohubsi5-bit/djinni-market.git"
 DATA_BRANCH = "data"
+# Both configurable so the `data` branch source can move (e.g. GitHub -> GitLab) without a
+# code change. DATA_URL_ENV absent -> DEFAULT_CLONE_URL (today's public, anonymous GitHub
+# mirror) so nothing breaks before the switch. DATA_TOKEN_ENV is optional and only needed for
+# a non-anonymous remote; see _auth_url_and_env for how it's kept out of argv/logs.
+DATA_URL_ENV = "DJINNI_DATA_URL"
+DATA_TOKEN_ENV = "DJINNI_DATA_TOKEN"
 
 SNAPSHOT_COLS = (
     "scrape_date", "category", "exp", "english_level", "region", "work_format", "level",
-    "candidates_online", "candidates_delta_30d", "cand_expect_min", "cand_expect_max",
+    "candidates_online", "candidates_delta_30d", "candidates_metric", "cand_expect_min", "cand_expect_max",
     "offers_per_candidate", "calculated_at", "jobs_online", "jobs_delta_30d",
     "job_fork_min", "job_fork_max", "applies_per_job_online", "djinni_index_30d",
     "djinni_index_delta", "offers_30d", "applies_30d", "cand_salary_p25", "cand_salary_p75",
@@ -60,18 +68,53 @@ def _rows(df: pd.DataFrame, cols: tuple[str, ...]) -> list[tuple]:
 
 # --------------------------------------------------------------- git checkout ----
 
-def ensure_data_checkout(dest: Path, url: str = DEFAULT_CLONE_URL, branch: str = DATA_BRANCH) -> None:
+def _auth_url_and_env(url: str, token: str | None) -> tuple[str, dict[str, str] | None, str | None]:
+    """If `token` is set: inject a generic username into `url` and return a subprocess env
+    that supplies `token` as the HTTPS password via a throwaway GIT_ASKPASS script. The token
+    is never placed in argv and never appears in a printed/echoed command line (unlike `git -c
+    http.extraHeader=...`, which puts it straight in argv — and in subprocess.TimeoutExpired's
+    own repr if the call ever times out). Returns (url, env-or-None, askpass-script-path-or-None);
+    caller must delete the script path when done.
+    """
+    if not token:
+        return url, None, None
+    parts = urlsplit(url)
+    netloc = parts.netloc if "@" in parts.netloc else f"oauth2@{parts.netloc}"
+    fd, askpass_path = tempfile.mkstemp(prefix="djinni-askpass-", suffix=".sh")
+    with os.fdopen(fd, "w", encoding="utf-8") as f:
+        f.write("#!/bin/sh\nprintf '%s\\n' \"$DJINNI_DATA_TOKEN\"\n")
+    os.chmod(askpass_path, 0o700)
+    env = dict(os.environ)
+    env["DJINNI_DATA_TOKEN"] = token
+    env["GIT_ASKPASS"] = askpass_path
+    env["GIT_TERMINAL_PROMPT"] = "0"
+    return urlunsplit(parts._replace(netloc=netloc)), env, askpass_path
+
+
+def ensure_data_checkout(dest: Path, url: str | None = None, branch: str = DATA_BRANCH) -> None:
     """Clone (if `dest` is empty) or fetch+checkout (if it already is a clone) the `data`
-    branch, anonymously, read-only. No secrets involved — public repo, HTTPS."""
+    branch. `url` defaults to the DJINNI_DATA_URL env var, falling back to the public,
+    anonymous GitHub mirror (DEFAULT_CLONE_URL). If DJINNI_DATA_TOKEN is set (needed for a
+    non-anonymous remote, e.g. the GitLab mirror), it's supplied as the HTTPS password via
+    GIT_ASKPASS — see _auth_url_and_env."""
+    url = url or os.environ.get(DATA_URL_ENV, DEFAULT_CLONE_URL)
+    token = os.environ.get(DATA_TOKEN_ENV)
+    auth_url, env, askpass_path = _auth_url_and_env(url, token)
     dest.mkdir(parents=True, exist_ok=True)
-    if (dest / ".git").exists():
-        subprocess.run(["git", "-C", str(dest), "fetch", "origin", branch, "--depth", "1"], check=True)
-        subprocess.run(["git", "-C", str(dest), "checkout", "-B", branch, "FETCH_HEAD"], check=True)
-    else:
-        subprocess.run(
-            ["git", "clone", "--branch", branch, "--single-branch", "--depth", "1", url, str(dest)],
-            check=True,
-        )
+    try:
+        if (dest / ".git").exists():
+            subprocess.run(["git", "-C", str(dest), "remote", "set-url", "origin", auth_url], check=True)
+            subprocess.run(["git", "-C", str(dest), "fetch", "origin", branch, "--depth", "1"],
+                            check=True, env=env)
+            subprocess.run(["git", "-C", str(dest), "checkout", "-B", branch, "FETCH_HEAD"], check=True)
+        else:
+            subprocess.run(
+                ["git", "clone", "--branch", branch, "--single-branch", "--depth", "1", auth_url, str(dest)],
+                check=True, env=env,
+            )
+    finally:
+        if askpass_path:
+            Path(askpass_path).unlink(missing_ok=True)
 
 
 # --------------------------------------------------------------- discovery ----
@@ -278,7 +321,7 @@ def _loader_git_sha() -> str:
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--data-dir", required=True, help="local clone dir of the `data` branch")
-    ap.add_argument("--clone-url", default=DEFAULT_CLONE_URL)
+    ap.add_argument("--clone-url", default=os.environ.get(DATA_URL_ENV, DEFAULT_CLONE_URL))
     ap.add_argument("--no-fetch", action="store_true", help="use --data-dir as-is, skip git fetch/checkout")
     ap.add_argument("--legacy-parquet", help="one-time import of legacy/salaries.parquet")
     ap.add_argument("--mapping-csv", help="reload mapping/category_role_mapping.csv")
