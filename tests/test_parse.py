@@ -66,3 +66,21 @@ def test_expandable_threshold():
     assert slices.expandable({'candidates_online': 10, 'jobs_online': 0})
     assert slices.expandable({'candidates_online': 2, 'jobs_online': 12})
     assert not slices.expandable({'candidates_online': 9, 'jobs_online': 9})
+
+
+def test_candidates_metric_old_layout_is_online():
+    assert parse_page(page('python_exp3.html'))['snapshot']['candidates_metric'] == 'online'
+
+
+def test_candidates_metric_redefined_2026_10_04():
+    # live https://djinni.co/salaries/?category=python fetched 2026-10-05: the card now counts
+    # "active candidates (applied or replied in 4 weeks)" and has no 30-day diff badge
+    s = parse_page(page('python_active_2026-10-05.html'))['snapshot']
+    assert s['candidates_metric'] == 'active_4w'
+    assert s['candidates_online'] == 1716 and s['candidates_delta_30d'] is None
+    assert s['jobs_online'] == 119 and s['calculated_at'] == '2026-10-04T20:00:42.235254'
+
+
+def test_candidates_metric_unknown_title_is_flagged():
+    html = page('python_exp3.html').replace('Кандидатів онлайн', 'Щось нове')
+    assert parse_page(html)['snapshot']['candidates_metric'] == 'unknown:Щось нове'

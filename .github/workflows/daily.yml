@@ -68,7 +68,9 @@ jobs:
             exit 0
           fi
           ARGS="--out store --keep-days 7"
-          # nightly run always (re)writes today: one file per day, so a rerun replaces, never duplicates
+          # the run is labelled with the Europe/Kyiv date of its START (run.run_date): the 23:30 UTC
+          # cron is already the next Kyiv day, so it never overwrites the previous day's file; a rerun
+          # on the same Kyiv day replaces that day's file and its runs.csv row, never duplicates
           if [ "$EVENT" = "schedule" ] || [ "$FORCE" = "true" ]; then ARGS="$ARGS --force"; fi
           python -m djinni_market.run $ARGS
 
