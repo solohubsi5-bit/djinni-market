@@ -87,6 +87,27 @@ def drops(snaps: list, out: Path, day: str) -> list:
     return res
 
 
+def metric_changes(snaps: list, out: Path, day: str) -> dict:
+    """Which candidates metric(s) this run saw vs the previous file. Djinni silently redefined the
+    headline candidates number once already (online -> active_4w, 2026-10-04); a change here means
+    the candidates series breaks and day-over-day comparisons are meaningless."""
+    now = sorted({s.get('candidates_metric') for s in snaps if s.get('candidates_metric')})
+    res = {'now': now}
+    unknown = [m for m in now if m.startswith('unknown:')]
+    if unknown:
+        annotate('error', f'unrecognised candidates card title(s) {unknown} - Djinni may have redefined the '
+                          f'candidates number again; check the page and parse.CANDIDATE_METRICS')
+    prev_files = sorted(f for f in (out / 'snapshot').glob('*.parquet') if f.stem < day)
+    if prev_files:
+        prev = pd.read_parquet(prev_files[-1])
+        before = sorted(prev.candidates_metric.dropna().unique()) if 'candidates_metric' in prev else []
+        res['before'] = before
+        if before and before != now:
+            annotate('warning', f'candidates metric changed {before} -> {now} vs {prev_files[-1].stem}: '
+                                f'candidates_online is a different series from here on')
+    return res
+
+
 def write(out: Path, report: dict):
     (out / 'run_report.json').write_text(json.dumps(report, ensure_ascii=False, indent=1), encoding='utf-8')
     summary = os.environ.get('GITHUB_STEP_SUMMARY')

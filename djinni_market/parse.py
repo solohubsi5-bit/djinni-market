@@ -54,6 +54,19 @@ def _headline(card):
     return to_num(_text(big)) if big else None, to_num(_text(diff)) if diff else None
 
 
+# What the big number in #candidates_card counts. Djinni redefined it between the 2026-10-03 and
+# 2026-10-04 (Kyiv) runs: "Кандидатів онлайн" (+30-day diff badge) became "Активні кандидати"
+# ("responded to a vacancy or replied to a recruiter in the last 4 weeks", no diff badge), roughly
+# 0.4x the old number. The two series are NOT comparable; this column marks which one a row holds.
+CANDIDATE_METRICS = {'Кандидатів онлайн': 'online', 'Активні кандидати': 'active_4w'}
+
+
+def candidates_metric(card) -> str:
+    title = card.find(['h2', 'h3']) if card is not None else None
+    label = re.sub(r'\s+', ' ', title.get_text(' ', strip=True)) if title else ''
+    return CANDIDATE_METRICS.get(label, 'unknown:' + label)
+
+
 def _calc_at(el):
     return el.get('data-calculated-at') if el is not None else None
 
@@ -69,6 +82,7 @@ def parse_snapshot(soup: BeautifulSoup) -> dict:
     c = soup.find(id='candidates_card')
     t = _text(c)
     out['candidates_online'], out['candidates_delta_30d'] = _headline(c)
+    out['candidates_metric'] = candidates_metric(c)
     out['cand_expect_min'], out['cand_expect_max'] = _range(t, 'Середні очікування')
     out['offers_per_candidate'] = _after(t, 'Пропозицій в середньому')
     out['calculated_at'] = _calc_at(c)
