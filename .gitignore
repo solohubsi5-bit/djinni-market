@@ -10,3 +10,15 @@ public/
 tmp_*/
 *.log
 .env
+
+# 2026-10-05 security audit: never commit secrets, keys, model/data caches
+*.pem
+*.key
+*.token
+*.p12
+*.pfx
+*.sqlite*
+*.abf
+.env*
+!.env.example
+.private/
