@@ -43,6 +43,11 @@ scrape:
         exit 0
       fi
     - |
+      # Idempotent: the runner can reuse the git dir between runs (fetch strategy), which
+      # leaves `store`'s worktree registration behind after the working dir is cleaned up.
+      # Prune stale admin files and clear any leftover dir before (re-)adding.
+      git worktree prune
+      rm -rf store
       if git fetch origin data --depth 1; then
         git worktree add store FETCH_HEAD --detach
       else
