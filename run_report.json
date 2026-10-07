@@ -1,0 +1,83 @@
+{
+ "date": "2026-10-07",
+ "finished_utc": "2026-10-07T00:31:02+00:00",
+ "status": "ok",
+ "pages": 6865,
+ "ok": 6864,
+ "errors": 1,
+ "seconds": 3095,
+ "breaker_open": false,
+ "per_level": {
+  "1": {
+   "fetched": 882,
+   "expandable": 519,
+   "errors": 0
+  },
+  "2": {
+   "fetched": 2076,
+   "expandable": 869,
+   "errors": 0
+  },
+  "3": {
+   "fetched": 869,
+   "expandable": 650,
+   "errors": 0
+  },
+  "4": {
+   "fetched": 3038,
+   "expandable": 2305,
+   "errors": 1
+  }
+ },
+ "config_values_missing": {},
+ "filter_changes": {},
+ "unmapped_categories": [
+  "account_manager",
+  "advertising",
+  "architect",
+  "artist",
+  "asic_design",
+  "avionics",
+  "business_development",
+  "cso",
+  "deftech",
+  "dotnet_gamedev",
+  "electronic_warfare",
+  "finops",
+  "firmware",
+  "fpga",
+  "hardware",
+  "hardware_engineer",
+  "level_design",
+  "markup",
+  "military_software",
+  "performance_marketing",
+  "qa_hardware",
+  "rf_engineer",
+  "robotics",
+  "technical_writing",
+  "uav_drone",
+  "uav_drone_pilot",
+  "vfx_artist",
+  "video_editor",
+  "weapons_systems"
+ ],
+ "candidate_drops": [],
+ "candidates_metric": {
+  "now": [
+   "active_4w"
+  ],
+  "before": [
+   "active_4w"
+  ]
+ },
+ "error_kinds": {
+  "RuntimeError": 1
+ },
+ "error_samples": [
+  {
+   "url": "https://djinni.co/salaries/?category=project_manager&exp=2&english_level=upper&work_format=full_remote",
+   "error": "RuntimeError: giving up on https://djinni.co/salaries/?category=project_manager&exp=2&english_level=upper&work_format=full_remote"
+  }
+ ]
+}
